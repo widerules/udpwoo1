@@ -6,7 +6,6 @@ import java.net.DatagramSocket;
 import java.net.InetAddress;
 import java.net.SocketException;
 import java.net.UnknownHostException;
-import java.util.Calendar;
 import java.util.Date;
 
 import org.json.JSONException;
@@ -31,7 +30,7 @@ import android.widget.Toast;
 public class UDPWoo extends Activity {
 
 	Button btnSave, btnSendSMS;
-	CheckBox checkOwner;
+//	CheckBox checkOwner;
 	EditText editGivenName, editMiddleName, editFamilyName, editPhone, editEmail, 
 	         editIM, editStreet, editPOBox, editCity, editState, editZipCode, editCountry, 
 	         editSNS, editOrg, editNotes;
@@ -41,15 +40,14 @@ public class UDPWoo extends Activity {
 	
 	public String total;
 	
-	String strAndroidOwner, strTypes, strGivenName, strMiddleName, strFamilyName, strMan, strWoman, strSpinPhone, 
+	String strTypes, strGivenName, strMiddleName, strFamilyName, strMan, strWoman, strSpinPhone, 
 		   strPhone, strSpinEmail, strEmail, strSpinIM, strIM, strSpinAddr, strStreet, strPOBox, strCity, strState, strZipCode,
-	       strCountry, strSpinSNS, strSNS, strSpinOrg, strOrg, strNotes, strDate, strHour, strMin, strSec; 
+	       strCountry, strSpinSNS, strSNS, strSpinOrg, strOrg, strNotes, strTime; 
 	
 	private ContactDBAdapter mDbHelper;
 	SQLiteDatabase db;
 	UpdatePacket update = new UpdatePacket();
-	
-	
+		
 	private String array_phone[];
 	private String array_email[];
 	private String array_im[];
@@ -78,9 +76,7 @@ public class UDPWoo extends Activity {
         
         btnMan = (RadioButton)findViewById(R.id.SexMan); 
         btnWoman = (RadioButton)findViewById(R.id.SexWoman); 
-        
-        checkOwner = (CheckBox) findViewById(R.id.owner);
-        
+            
         editPhone = (EditText) findViewById(R.id.txtPhone);
         editEmail = (EditText) findViewById(R.id.txtEmail);
         editIM = (EditText) findViewById(R.id.txtIM);
@@ -177,14 +173,15 @@ public class UDPWoo extends Activity {
             
             	Date date = new Date();
             	
-            	if (checkOwner.isChecked()){ 
-            		strAndroidOwner = "Y";
-            		strTypes = "update";
-            	}else{
-            		strAndroidOwner = "N";
-            		strTypes = "";
-            	}
-            	
+//            	if (checkOwner.isChecked()){ 
+//            		strAndroidOwner = "Y";
+//            		strTypes = "update";
+//            	}else{
+//            		strAndroidOwner = "N";
+//            		strTypes = "";
+//            	}
+
+            	strTypes = "update";
             	strGivenName = editGivenName.getText().toString();                 
             	strMiddleName = editMiddleName.getText().toString();  
             	strFamilyName = editFamilyName.getText().toString();  
@@ -216,64 +213,54 @@ public class UDPWoo extends Activity {
                 strOrg = editOrg.getText().toString();
                 
                 strNotes = editNotes.getText().toString();
-                strDate = Integer.toString(date.getDate());
-                strHour = Integer.toString(date.getHours());
-                strMin = Integer.toString(date.getMinutes());
-                strSec = Integer.toString(date.getSeconds());
                 
+                strTime = Long.toString(System.currentTimeMillis());
+                                
                 if(btnMan.isChecked() == true)
-            		contact_id = mDbHelper.createContact(strAndroidOwner, strTypes, strGivenName, strMiddleName, strFamilyName, strMan, strSpinPhone, strPhone, 
+            		contact_id = mDbHelper.createContact(strTypes, strGivenName, strMiddleName, strFamilyName, strMan, strSpinPhone, strPhone, 
             				strSpinEmail, strEmail, strSpinIM, strIM, strSpinAddr, strStreet, strPOBox, strCity, strState, 
-            				strZipCode, strCountry, strSpinSNS, strSNS, strSpinOrg, strOrg, strNotes, strDate, strHour, strMin, strSec);
+            				strZipCode, strCountry, strSpinSNS, strSNS, strSpinOrg, strOrg, strNotes, strTime);
             		
             	if(btnWoman.isChecked() == true)
-            		contact_id = mDbHelper.createContact(strAndroidOwner, strTypes, strGivenName, strMiddleName, strFamilyName, strWoman, strSpinPhone, strPhone, 
+            		contact_id = mDbHelper.createContact(strTypes, strGivenName, strMiddleName, strFamilyName, strWoman, strSpinPhone, strPhone, 
             				strSpinEmail, strEmail, strSpinIM, strIM, strSpinAddr, strStreet, strPOBox, strCity, strState, 
-            				strZipCode, strCountry, strSpinSNS, strSNS, strSpinOrg, strOrg, strNotes, strDate, strHour, strMin, strSec);
+            				strZipCode, strCountry, strSpinSNS, strSNS, strSpinOrg, strOrg, strNotes, strTime);
             }
         });
         
-        	Context context = getApplicationContext();
-        	int duration = Toast.LENGTH_SHORT;
-      
-        
-//        	mHandler.postDelayed(new Runnable() {             
-//            	public void run() {                 
-//            		doStuff();             
-//            		}         
-//            }, 10000); 
+        mHandler.postDelayed(new Runnable() {             
+            public void run() {                 
+            	doStuff();             
+            }         
+        }, 10000); 
 
-        	
-        	Thread t1 = new Thread(new Server(update, mDbHelper));
-        	t1.start();
+        Thread t1 = new Thread(new Server(update, mDbHelper));
+        t1.start();
            
     } //onCreate
     
-//    private void doStuff() {           
-//    	Context context = getApplicationContext();
-//      int duration = Toast.LENGTH_SHORT;
-//    	
-//    	Thread t = new Thread(new Client(mDbHelper));
-//    	Toast toast1 = Toast.makeText(context,"Start client thread after 10 sec", duration);
-//        toast1.show();        	
-//        t.start(); 
-//    	
-//    } 
+    private void doStuff() {           
+    	Context context = getApplicationContext();
+    	int duration = Toast.LENGTH_SHORT;
+    	
+    	Thread t = new Thread(new Client(mDbHelper));
+    	Toast toast1 = Toast.makeText(context,"Start client thread after 10 sec", duration);
+        toast1.show();        	
+        t.start(); 
+    	
+    } 
     
 
 } //UDPWoo
 
 class Client implements Runnable{
 	 
-	public static final String CLIENTIP="10.0.2.2";
-    public static final int CLIENTPORT=5000;
-    
-    public static final String SERVERIP="10.0.2.15";
-    public static final int SERVERPORT=5000;
+	public static final String CLIENTIP = "10.0.2.2";
+    public static final int CLIENTPORT = 5000;
     
     String strGivenName, strMiddleName, strFamilyName, strGender, strSpinPhone, 
 	   	   strPhone, strSpinEmail, strEmail, strSpinIM, strIM, strSpinAddr, strStreet, strPOBox, strCity, strState, strZipCode,
-	       strCountry, strSpinSNS, strSNS, strSpinOrg, strOrg, strNotes, strDate, strHour, strMin, strSec; 
+	       strCountry, strSpinSNS, strSNS, strSpinOrg, strOrg, strNotes, strYear, strTime; 
 	
     ContactDBAdapter mDbHelper_server;
      
@@ -298,10 +285,10 @@ class Client implements Runnable{
             	if (cursor.moveToFirst()) {
 
             	do { 
-            		if((cursor.getString(cursor.getColumnIndex(ContactDBAdapter.KEY_OWNER)).equalsIgnoreCase("Y"))
-            			&& (cursor.getString(cursor.getColumnIndex(ContactDBAdapter.KEY_TYPES)).equalsIgnoreCase("update"))){
+//            		if((cursor.getString(cursor.getColumnIndex(ContactDBAdapter.KEY_OWNER)).equalsIgnoreCase("Y"))
+//            			&& (cursor.getString(cursor.getColumnIndex(ContactDBAdapter.KEY_TYPES)).equalsIgnoreCase("update"))){
 
-            			update.Owner = cursor.getString(cursor.getColumnIndex(ContactDBAdapter.KEY_OWNER));
+            			
             			update.Types = cursor.getString(cursor.getColumnIndex(ContactDBAdapter.KEY_TYPES));
             			update.GivenName = cursor.getString(cursor.getColumnIndex(ContactDBAdapter.KEY_GIVENNAME));
             			update.MiddleName = cursor.getString(cursor.getColumnIndex(ContactDBAdapter.KEY_MIDDLENAME));
@@ -325,12 +312,8 @@ class Client implements Runnable{
             			update.SpinOrg = cursor.getString(cursor.getColumnIndex(ContactDBAdapter.KEY_SPINORG));
             			update.Org = cursor.getString(cursor.getColumnIndex(ContactDBAdapter.KEY_ORG));
             			update.Notes = cursor.getString(cursor.getColumnIndex(ContactDBAdapter.KEY_NOTES));
-            			update.Date = cursor.getString(cursor.getColumnIndex(ContactDBAdapter.KEY_DATE));
-            			update.Hour = cursor.getString(cursor.getColumnIndex(ContactDBAdapter.KEY_HOUR));
-            			update.Min = cursor.getString(cursor.getColumnIndex(ContactDBAdapter.KEY_MIN));
-            			update.Sec = cursor.getString(cursor.getColumnIndex(ContactDBAdapter.KEY_SEC));
-            			
-            			update.setOwner(update.Owner);
+            			update.Time = cursor.getString(cursor.getColumnIndex(ContactDBAdapter.KEY_TIME));
+            			            			            			
             			update.setTypes(update.Types);
             			update.setGivenName(update.GivenName);   
             			update.setMiddleName(update.MiddleName);   
@@ -354,14 +337,10 @@ class Client implements Runnable{
             			update.setSpinOrg(update.SpinOrg);                   
             			update.setOrg(update.Org);                    
             			update.setNotes(update.Notes);
-            			update.setDate(update.Date);
-            			update.setHour(update.Hour);
-            			update.setMin(update.Min);
-            			update.setSec(update.Sec);
-                                    			
+            			update.setTime(update.Time);
+            			                                    			
             			JSONObject jsonUpdate = new JSONObject();  
-                  
-            			jsonUpdate.put("Owner", update.getOwner()); 
+                              			
             			jsonUpdate.put("Types", update.getTypes()); 
             			jsonUpdate.put("GivenName", update.getGivenName()); 
             			jsonUpdate.put("MiddleName", update.getMiddleName());  
@@ -384,12 +363,9 @@ class Client implements Runnable{
             			jsonUpdate.put("SNS", update.getSNS()); 
             			jsonUpdate.put("SpinOrg", update.getSpinOrg()); 
             			jsonUpdate.put("Org", update.getOrg()); 
-            			jsonUpdate.put("Notes", update.getNotes()); 
-            			jsonUpdate.put("Date", update.getDate()); 
-            			jsonUpdate.put("Hour", update.getHour()); 
-            			jsonUpdate.put("Min", update.getMin()); 
-            			jsonUpdate.put("Sec", update.getSec()); 
-                                  			
+            			jsonUpdate.put("Notes", update.getNotes());
+            			jsonUpdate.put("Time", update.getTime());
+            			
             			// json string representation of person object  
             			String stringUpdate = jsonUpdate.toString();  
             			DatagramPacket packet=new DatagramPacket( stringUpdate.getBytes(), stringUpdate.getBytes().length, iadd, CLIENTPORT);
@@ -397,7 +373,7 @@ class Client implements Runnable{
 
             			socket.send(packet); 
             			Log.i("client","2");
-            		}                                  
+            		//}                                  
             	} while(cursor.moveToNext());                        	
             	
             	}//if                 	
@@ -428,16 +404,18 @@ class Server implements Runnable{
         public static final String CLIENTIP="10.0.2.2";
         public static final int CLIENTPORT=5000;
           
-        boolean update_contact;
         UpdatePacket update = new UpdatePacket();
-    	
-        String strOwner, strTypes, strGivenName, strMiddleName, strFamilyName, strGender, strSpinPhone, 
-		       strPhone, strSpinEmail, strEmail, strSpinIM, strIM, strSpinAddr, strStreet, strPOBox, strCity, strState, strZipCode,
-	           strCountry, strSpinSNS, strSNS, strSpinOrg, strOrg, strNotes, strDate, strHour, strMin, strSec; 
+        boolean update_contact;
         
-        String Owner, Types, GivenName, FamilyName, Date, Hour, Min, Sec;
+        String strTypes, strGivenName, strMiddleName, strFamilyName, strGender, strSpinPhone, 
+    	       strPhone, strSpinEmail, strEmail, strSpinIM, strIM, strSpinAddr, strStreet, strPOBox, strCity, strState, strZipCode,
+               strCountry, strSpinSNS, strSNS, strSpinOrg, strOrg, strNotes, strTime; 
         
-        int intDate, intHour, intMin, intSec;
+        String Types, GivenName, MiddleName, FamilyName, Gender, SpinPhone, 
+        	   Phone, SpinEmail, Email, SpinIM, IM, SpinPostalAddr, Street, POBox, City, State, ZipCode,
+        	   Country, SpinSNS, SNS, SpinOrg, Org, Notes, Time;
+
+        long packetTime, dbTime;
         
     	ContactDBAdapter mDbHelper_server;
     	UpdatePacket total_contact;
@@ -463,21 +441,12 @@ class Server implements Runnable{
             				Log.i("server","1");
                            
             				socket.receive(receive_packet);
-            				
-            				Calendar cal = Calendar.getInstance();
-                            long sec = cal.getTimeInMillis();
-                            Date date = new Date();
-                            int min = date.getMinutes();
-                            
-                            Log.i("udpsung receiving min", Integer.toString(min));
-                            Log.i("udpsung receiving sec", Long.toString(sec));
             				Log.i("server","2");
             				
             				byte[] receive_data = receive_packet.getData();
             				String value = new String(receive_data);
             				Log.i("server","3");
-            				 
-            				strOwner = new JSONObject(value).getString("Owner");
+            				         				
             				strTypes = new JSONObject(value).getString("Types");
             				strGivenName = new JSONObject(value).getString("GivenName");  
             				strMiddleName = new JSONObject(value).getString("MiddleName");  
@@ -501,24 +470,12 @@ class Server implements Runnable{
             				strSpinOrg = new JSONObject(value).getString("SpinOrg"); 
             				strOrg = new JSONObject(value).getString("Org"); 
             				strNotes = new JSONObject(value).getString("Notes"); 
-            				strDate =  new JSONObject(value).getString("Date"); 
-            				strHour = new JSONObject(value).getString("Hour"); 
-            				strMin = new JSONObject(value).getString("Min"); 
-            				strSec = new JSONObject(value).getString("Sec");
+            				strTime = new JSONObject(value).getString("Time"); 
+            				        				
+            				packetTime = Long.parseLong(strTime);
             				
-            				intDate =  Integer.parseInt(strDate);
-            				intHour = Integer.parseInt(strHour); 
-            				intMin = Integer.parseInt(strMin);
-            				intSec = Integer.parseInt(strSec);
-            				
-            				Log.i("owner", strOwner);
-            				Log.i("types", strTypes);
-            				Log.i("givenname", strGivenName);
-            				Log.i("gender", strGender);
-            				Log.i("familyname", strFamilyName);
-            				
+            				DatagramPacket send_packet = new DatagramPacket(buf,buf.length);
             				InetAddress iadd = InetAddress.getByName(CLIENTIP);
-            				
             				
             		        try {
             		        	Cursor cur = mDbHelper_server.fetchAllContacts(); 
@@ -527,52 +484,116 @@ class Server implements Runnable{
             		        		if (cur.moveToFirst()){
             		        			do{
             		        				
-            		        				Owner = cur.getString(cur.getColumnIndex(ContactDBAdapter.KEY_OWNER));
-            		        				Types = cur.getString(cur.getColumnIndex(ContactDBAdapter.KEY_TYPES));	
-            		        				GivenName = cur.getString(cur.getColumnIndex(ContactDBAdapter.KEY_GIVENNAME));
-            		        				FamilyName = cur.getString(cur.getColumnIndex(ContactDBAdapter.KEY_FAMILYNAME));
-            		        				Date = cur.getString(cur.getColumnIndex(ContactDBAdapter.KEY_DATE));
-            		        				Hour = cur.getString(cur.getColumnIndex(ContactDBAdapter.KEY_HOUR));
-            		        				Min = cur.getString(cur.getColumnIndex(ContactDBAdapter.KEY_MIN));
-            		        				Sec = cur.getString(cur.getColumnIndex(ContactDBAdapter.KEY_SEC)); 	
+            		        				Types = cur.getString(cur.getColumnIndex(ContactDBAdapter.KEY_TYPES));
+            		            			GivenName = cur.getString(cur.getColumnIndex(ContactDBAdapter.KEY_GIVENNAME));
+            		            			MiddleName = cur.getString(cur.getColumnIndex(ContactDBAdapter.KEY_MIDDLENAME));
+            		            			FamilyName = cur.getString(cur.getColumnIndex(ContactDBAdapter.KEY_FAMILYNAME));
+            		            			Gender = cur.getString(cur.getColumnIndex(ContactDBAdapter.KEY_GENDER));
+            		            			SpinPhone = cur.getString(cur.getColumnIndex(ContactDBAdapter.KEY_SPINPHONE));
+            		            			Phone = cur.getString(cur.getColumnIndex(ContactDBAdapter.KEY_PHONE));
+            		            			SpinEmail = cur.getString(cur.getColumnIndex(ContactDBAdapter.KEY_SPINEMAIL));
+            		            			Email = cur.getString(cur.getColumnIndex(ContactDBAdapter.KEY_EMAIL));
+            		            			SpinIM = cur.getString(cur.getColumnIndex(ContactDBAdapter.KEY_SPINIM));
+            		            			IM = cur.getString(cur.getColumnIndex(ContactDBAdapter.KEY_IM));
+            		            			SpinPostalAddr = cur.getString(cur.getColumnIndex(ContactDBAdapter.KEY_SPINADDR));
+            		            			Street = cur.getString(cur.getColumnIndex(ContactDBAdapter.KEY_STREET));
+            		            			POBox = cur.getString(cur.getColumnIndex(ContactDBAdapter.KEY_POBOX));
+            		            			City = cur.getString(cur.getColumnIndex(ContactDBAdapter.KEY_CITY));
+            		            			State = cur.getString(cur.getColumnIndex(ContactDBAdapter.KEY_STATE));
+            		            			ZipCode = cur.getString(cur.getColumnIndex(ContactDBAdapter.KEY_ZIPCODE));
+            		            			Country = cur.getString(cur.getColumnIndex(ContactDBAdapter.KEY_COUNTRY));
+            		            			SpinSNS = cur.getString(cur.getColumnIndex(ContactDBAdapter.KEY_SPINSNS));
+            		            			SNS = cur.getString(cur.getColumnIndex(ContactDBAdapter.KEY_SNS));
+            		            			SpinOrg = cur.getString(cur.getColumnIndex(ContactDBAdapter.KEY_SPINORG));
+            		            			Org = cur.getString(cur.getColumnIndex(ContactDBAdapter.KEY_ORG));
+            		            			Notes = cur.getString(cur.getColumnIndex(ContactDBAdapter.KEY_NOTES));
+            		            			Time = cur.getString(cur.getColumnIndex(ContactDBAdapter.KEY_TIME));
+            		            			
+            		        				dbTime = Long.parseLong(Time);
             		        				
-            		        				Log.i("owner at UDPWoo DB", Owner);
-            		        				Log.i("types at UDPWoo DB", Types);
-            		        				Log.i("givenname at UDPWoo DB", GivenName);            	            				
-            	            				Log.i("familyname at UDPWoo DB", FamilyName);
-            	            				Log.i("date at UDPWoo DB", Date);
-            	            				Log.i("hour at UDPWoo DB", Hour);
-            	            				Log.i("min at UDPWoo DB", Min);
-            	            				Log.i("sec at UDPWoo DB", Sec);
-	
-            	            				  if((strOwner.compareTo(Owner) == 0) ){ //if owner is the same
+            		        				Long packet_time = new Long(packetTime);
+            		        				Long db_time = new Long(dbTime);
+            		        					
+            		        				int comp = packet_time.compareTo(db_time);
+
+            	            				if((strGivenName.compareTo(GivenName) ==  0) && (strFamilyName.compareTo(FamilyName) == 0)){ //if givenname and familyname are same
             	            						
-            	            					if((strGivenName.compareTo(GivenName) ==  0) && (strFamilyName.compareTo(FamilyName) == 0) 
-            	            						&& (strDate.compareTo(Date) == 0) && (strHour.compareTo(Hour) == 0) && (strMin.compareTo(Min) == 0) && (strSec.compareTo(Sec) == 0))	        			            		        				
-            	            							Log.i("Stop update", "Stop update");        		        				  		
-            	            					else if((strGivenName.compareTo(GivenName) ==  0) && (strFamilyName.compareTo(FamilyName) == 0) 
-            	            						&& ((strDate.compareTo(Date) != 0) || (strHour.compareTo(Hour) != 0) || (strMin.compareTo(Min) != 0) || (strSec.compareTo(Sec) != 0))){            		        					
-            		        						Thread t = new Thread(new Client(mDbHelper_server));        		        				                		        				   
-            		        						t.start();   					
-            		        					}
-            	            					
-            	            				  } else { //if owner is different
-            	            					  if((strGivenName.compareTo(GivenName) ==  0) && (strFamilyName.compareTo(FamilyName) == 0)){ 		        			          
-              		        						String rowId = cur.getString(cur.getColumnIndexOrThrow(ContactDBAdapter.KEY_ROWID));                                                
-              		        						update_contact = mDbHelper_server.updateContact(Long.parseLong(rowId), "N", strTypes, strGivenName, strMiddleName, strFamilyName, strGender, strSpinPhone, 
-              		        						 		 		strPhone, strSpinEmail, strEmail, strSpinIM, strIM, strSpinAddr, strStreet, strPOBox, strCity, strState, strZipCode,
-              		        						 		 		strCountry, strSpinSNS, strSNS, strSpinOrg, strOrg, strNotes, strDate, strHour, strMin, strSec);               		                    		        						     						
-              		        						DatagramPacket packet=new DatagramPacket( value.getBytes(), value.getBytes().length, iadd, CLIENTPORT);
-              	                      			  	Log.i("updateclient","1");
-              	                      			  	socket.send(packet); 
-              	                      			  	Log.i("updateclient","2");
-            	            					 } //if
-            	            					              	            					             	            				 
-            	            				  } //else            	            					            	            				       		        			
-            		        			}while (cur.moveToNext());
+            	            					if(comp < 0){            	            						            	            						
+            	            							            	            						
+            	                        			update.setTypes(Types);
+            	                        			update.setGivenName(GivenName);   
+            	                        			update.setMiddleName(MiddleName);   
+            	                        			update.setFamilyName(FamilyName);           
+            	                        			update.setGender(Gender);                    
+            	                        			update.setSpinPhone(SpinPhone);                    
+            	                        			update.setPhone(Phone);                    
+            	                        			update.setSpinEmail(SpinEmail);                    
+            	                        			update.setEmail(Email);                     
+            	                        			update.setSpinIM(SpinIM);                    
+            	                        			update.setIM(IM);                     
+            	                        			update.setSpinPostalAddr(SpinPostalAddr);                    
+            	                        			update.setStreet(Street);                    
+            	                        			update.setPOBox(POBox);                    
+            	                        			update.setCity(City);                   
+            	                        			update.setState(State);                    
+            	                        			update.setZipCode(ZipCode);                    
+            	                        			update.setCountry(Country);                    
+            	                        			update.setSpinSNS(SpinSNS);                    
+            	                        			update.setSNS(SNS);                    
+            	                        			update.setSpinOrg(SpinOrg);                   
+            	                        			update.setOrg(Org);                    
+            	                        			update.setNotes(Notes);
+            	                        			update.setTime(Time);
+            	                        			        	                                               
+            	                        			JSONObject jsonUpdate = new JSONObject();  
+            	                                          			
+            	                        			jsonUpdate.put("Types", update.getTypes()); 
+            	                        			jsonUpdate.put("GivenName", update.getGivenName()); 
+            	                        			jsonUpdate.put("MiddleName", update.getMiddleName());  
+            	                        			jsonUpdate.put("FamilyName", update.getFamilyName()); 
+            	                        			jsonUpdate.put("Gender", update.getGender()); 
+            	                        			jsonUpdate.put("SpinPhone", update.getSpinPhone()); 
+            	                        			jsonUpdate.put("Phone", update.getPhone()); 
+            	                        			jsonUpdate.put("SpinEmail", update.getSpinEmail()); 
+            	                        			jsonUpdate.put("Email", update.getEmail()); 
+            	                        			jsonUpdate.put("SpinIM", update.getSpinIM()); 
+            	                        			jsonUpdate.put("IM", update.getIM()); 
+            	                        			jsonUpdate.put("SpinPostalAddr", update.getSpinPostalAddr()); 
+            	                        			jsonUpdate.put("Street", update.getStreet()); 
+            	                        			jsonUpdate.put("POBox", update.getPOBox()); 
+            	                        			jsonUpdate.put("City", update.getCity()); 
+            	                        			jsonUpdate.put("State", update.getState()); 
+            	                        			jsonUpdate.put("ZipCode", update.getZipCode()); 
+            	                        			jsonUpdate.put("Country", update.getCountry()); 
+            	                        			jsonUpdate.put("SpinSNS", update.getSpinSNS()); 
+            	                        			jsonUpdate.put("SNS", update.getSNS()); 
+            	                        			jsonUpdate.put("SpinOrg", update.getSpinOrg()); 
+            	                        			jsonUpdate.put("Org", update.getOrg()); 
+            	                        			jsonUpdate.put("Notes", update.getNotes());
+            	                        			jsonUpdate.put("Time", update.getTime());
+            	                        			
+            	                        			// json string representation of person object  
+            	                        			String stringUpdate = jsonUpdate.toString();  
+            	                        			send_packet=new DatagramPacket( stringUpdate.getBytes(), stringUpdate.getBytes().length, iadd, CLIENTPORT);
+            	                        			socket.send(send_packet);
+            	                        			
+            	            					} else if(comp == 0){
+            	            						Log.i("Stop update", "Stop update"); 
+            	            					} else {
+            	            						
+            	            						String rowId = cur.getString(cur.getColumnIndexOrThrow(ContactDBAdapter.KEY_ROWID));                                                
+            	            						update_contact = mDbHelper_server.updateContact(Long.parseLong(rowId),strTypes, strGivenName, strMiddleName, strFamilyName, strGender, strSpinPhone, 
+          		        						 		 			 strPhone, strSpinEmail, strEmail, strSpinIM, strIM, strSpinAddr, strStreet, strPOBox, strCity, strState, strZipCode,
+          		        						 		 			 strCountry, strSpinSNS, strSNS, strSpinOrg, strOrg, strNotes, strTime);               		                    		        						     						
+            	            						send_packet=new DatagramPacket( value.getBytes(), value.getBytes().length, iadd, CLIENTPORT);
+            	            						socket.send(send_packet);
+            	            						
+            	            					} 
+            	            				  }         	            					 	
+            		        			}while (cur.moveToNext());        		        			
             		        		} //if
             		        	} // if
-            		        	cur.close();              		        	
+            		        	cur.close();         		       	        	
             		        } catch (Exception e) {
             					e.printStackTrace();
             		        }            		     
@@ -593,8 +614,11 @@ class Server implements Runnable{
             } catch (SocketException e) {
                 // TODO Auto-generated catch block
                 e.printStackTrace();       
-            }             
-     } //run
-            	   
+            } 
+            
+    } //run    
 } //Server
+
+
+
 
