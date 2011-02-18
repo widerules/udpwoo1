@@ -26,13 +26,6 @@ android:layout_width="fill_parent"
 android:layout_height="fill_parent"
 android:background="#ff660033"
 >
-<CheckBox android:id="@+id/owner"
- android:layout_width="wrap_content"
- android:layout_height="wrap_content" 
- android:text="Android Owner?" 
- android:layout_x="5px"
- android:layout_y="5px"
-/>
 <TextView
 android:id="@+id/widget37"
 android:layout_width="wrap_content"
