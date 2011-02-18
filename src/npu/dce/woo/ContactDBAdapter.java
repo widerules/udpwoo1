@@ -10,7 +10,6 @@ import android.util.Log;
 
 public class ContactDBAdapter {
 
-	 public static final String KEY_OWNER = "owner";
 	 public static final String KEY_TYPES = "types";
 	 public static final String KEY_GIVENNAME = "givenname";
 	 public static final String KEY_MIDDLENAME = "middlename";
@@ -43,11 +42,8 @@ public class ContactDBAdapter {
 	 
 	 public static final String KEY_NOTES = "notes";
 	 
-	 public static final String KEY_DATE = "date";
-	 public static final String KEY_HOUR = "hour";
-	 public static final String KEY_MIN = "min";
-	 public static final String KEY_SEC = "sec";
-	 
+	 public static final String KEY_TIME = "time";
+	 	 
 	 public static final String KEY_ROWID = "_id";    
 	 
 	 private static final String TAG = "ContactDbAdapter";
@@ -56,16 +52,16 @@ public class ContactDBAdapter {
 	
 	 /* Database creation sql statement */    
 	 private static final String DATABASE_CREATE = "create table contacts (_id integer primary key autoincrement, "                    
-		 + "owner text not null, types text not null, givenname text not null, middlename text not null, familyname text not null, " 
+		 + "types text not null, givenname text not null, middlename text not null, familyname text not null, " 
 		 + "gender text not null, spinphone text, phone text not null,"
 		 + "spinemail text, email text not null, spinim text, im text not null,"
 		 + "spinaddr text, street text not null, pobox text not null, city text not null, state text not null, zipcode text not null,country text not null,"
 		 + "spinsns text, sns text not null, spinorg text, org text not null, notes text not null,"
-		 + "date text not null, hour text not null, min text not null, sec text not null);";   
+		 + "time text not null);";   
 	
-	 private static final String DATABASE_NAME = "updatecontact1.db";    
+	 private static final String DATABASE_NAME = "updatecontact5.db";    
 	 private static final String DATABASE_TABLE = "contacts";    
-	 private static final int DATABASE_VERSION = 3;    
+	 private static final int DATABASE_VERSION = 6;    
 	 private final Context mCtx;
 	 
 	 private static class DatabaseHelper extends SQLiteOpenHelper {        
@@ -105,13 +101,12 @@ public class ContactDBAdapter {
 		mDbHelper.close();    
 	}
 	
-	public long createContact(String owner, String types, String givenname, String middlename, String familyname, String gender, String spinphone, String phone,
+	public long createContact(String types, String givenname, String middlename, String familyname, String gender, String spinphone, String phone,
 			String spinemail, String email, String spinim, String im, String spinaddr, String street, String pobox, 
 			String city, String state, String zipcode, String country, String spinsns, String sns, String spinorg, 
-			String org, String notes, String date, String hour, String min, String sec) {        
+			String org, String notes, String time) {        
 		 
 		 ContentValues initialValues = new ContentValues(); 
-		 initialValues.put(KEY_OWNER, owner);
 		 initialValues.put(KEY_TYPES, types);
 		 initialValues.put(KEY_GIVENNAME, givenname);
 		 initialValues.put(KEY_MIDDLENAME, middlename);
@@ -135,10 +130,7 @@ public class ContactDBAdapter {
 		 initialValues.put(KEY_SPINORG, spinorg);
 		 initialValues.put(KEY_ORG, org);
 		 initialValues.put(KEY_NOTES, notes); 
-		 initialValues.put(KEY_DATE, date); 
-		 initialValues.put(KEY_HOUR, hour); 
-		 initialValues.put(KEY_MIN, min); 
-		 initialValues.put(KEY_SEC, sec); 
+		 initialValues.put(KEY_TIME, time); 
 		 
 		 return mDb.insert(DATABASE_TABLE, null, initialValues);    
 	} //createContact
@@ -154,20 +146,20 @@ public class ContactDBAdapter {
 	}
 	 
 	public Cursor fetchAllContacts() {        
-		return mDb.query(DATABASE_TABLE, new String[] {KEY_ROWID, KEY_OWNER, KEY_TYPES,
+		return mDb.query(DATABASE_TABLE, new String[] {KEY_ROWID, KEY_TYPES,
 				KEY_GIVENNAME, KEY_MIDDLENAME, KEY_FAMILYNAME, KEY_GENDER, KEY_SPINPHONE, KEY_PHONE,
 				KEY_SPINEMAIL, KEY_EMAIL, KEY_SPINIM, KEY_IM, KEY_SPINADDR, KEY_STREET, KEY_POBOX,
 				KEY_CITY, KEY_STATE, KEY_ZIPCODE, KEY_COUNTRY, KEY_SPINSNS, KEY_SNS, KEY_SPINORG,
-				KEY_ORG, KEY_NOTES, KEY_DATE, KEY_HOUR, KEY_MIN, KEY_SEC}, null, null, null, null, null);    
+				KEY_ORG, KEY_NOTES, KEY_TIME}, null, null, null, null, null);    
 	}
 	
 	public Cursor fetchContact(long rowId) throws SQLException {        
 		
-		Cursor mCursor = mDb.query(true, DATABASE_TABLE, new String[] {KEY_ROWID, KEY_OWNER, KEY_TYPES,                  
+		Cursor mCursor = mDb.query(true, DATABASE_TABLE, new String[] {KEY_ROWID, KEY_TYPES,                  
 				KEY_GIVENNAME, KEY_MIDDLENAME, KEY_FAMILYNAME, KEY_GENDER, KEY_SPINPHONE, KEY_PHONE,
 				KEY_SPINEMAIL, KEY_EMAIL, KEY_SPINIM, KEY_IM, KEY_SPINADDR, KEY_STREET, KEY_POBOX,
 				KEY_CITY, KEY_STATE, KEY_ZIPCODE, KEY_COUNTRY, KEY_SPINSNS, KEY_SNS, KEY_SPINORG,
-				KEY_ORG, KEY_NOTES, KEY_DATE, KEY_HOUR, KEY_MIN, KEY_SEC}, KEY_ROWID + "=" + rowId, null, null, null, null, null);        
+				KEY_ORG, KEY_NOTES, KEY_TIME}, KEY_ROWID + "=" + rowId, null, null, null, null, null);        
 		
 		if (mCursor != null)
 			mCursor.moveToFirst();                
@@ -175,13 +167,12 @@ public class ContactDBAdapter {
 	} //fetchContact
 	
 	
-	public boolean updateContact(long rowId, String owner, String types, String givenname, String middlename, String familyname, String gender, String spinphone, String phone,
+	public boolean updateContact(long rowId, String types, String givenname, String middlename, String familyname, String gender, String spinphone, String phone,
 			String spinemail, String email, String spinim, String im, String spinaddr, String street, String pobox, 
 			String city, String state, String zipcode, String country, String spinsns, String sns, String spinorg, 
-			String org, String notes, String date, String hour, String min, String sec) { 
+			String org, String notes, String time) { 
 		
 		ContentValues args = new ContentValues();        
-		args.put(KEY_OWNER, owner);
 		args.put(KEY_TYPES, types);
 		args.put(KEY_GIVENNAME, givenname);
 		args.put(KEY_MIDDLENAME, middlename);
@@ -205,30 +196,9 @@ public class ContactDBAdapter {
 		args.put(KEY_SPINORG, spinorg);
 		args.put(KEY_ORG, org);
 		args.put(KEY_NOTES, notes); 
-		args.put(KEY_DATE, date); 
-		args.put(KEY_HOUR, hour); 
-		args.put(KEY_MIN, min); 
-		args.put(KEY_SEC, sec); 
+		args.put(KEY_TIME, time); 
 	
 		return mDb.update(DATABASE_TABLE, args, KEY_ROWID  + "=" + rowId, null) > 0;    
 	
 	} //updateContact
-	
-	public boolean updateContactTime(long rowId, String date, String hour, String min, String sec) { 
-		
-		ContentValues args = new ContentValues();        
-//		args.put(KEY_OWNER, owner);
-//		args.put(KEY_TYPES, types);
-//		args.put(KEY_GIVENNAME, givenname);
-//		args.put(KEY_MIDDLENAME, middlename);
-//		args.put(KEY_FAMILYNAME, familyname);
-		args.put(KEY_DATE, date); 
-		args.put(KEY_HOUR, hour); 
-		args.put(KEY_MIN, min); 
-		args.put(KEY_SEC, sec); 
-	
-		return mDb.update(DATABASE_TABLE, args, KEY_ROWID  + "=" + rowId, null) > 0;    
-	
-	} //updateContactTime
-	
 }
