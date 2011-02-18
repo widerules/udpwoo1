@@ -12,7 +12,6 @@ public class UpdatePacket {
 //
 //    int Version;
     String Types;
-	String Owner;
 	String GivenName;
 	String MiddleName;
 	String FamilyName;
@@ -35,10 +34,7 @@ public class UpdatePacket {
 	String SpinOrg;
 	String Org;
 	String Notes;
-	String Date;
-	String Hour;
-	String Min;
-	String Sec;
+	String Time;
 	
 //	int GivenNameLength;
 //	int MiddleNameLength;
@@ -265,10 +261,6 @@ public class UpdatePacket {
         return Types;
     }
     
-    String getOwner(){
-    	return Owner;
-    }
-    
     String getGivenName(){ 
     	 return GivenName;
     }
@@ -357,21 +349,10 @@ public class UpdatePacket {
 		return Notes;
 	}
 	
-	String getDate(){ 
-		return Date;
+	String getTime(){ 
+		return Time;
 	}
 	
-	String getHour(){ 
-		return Hour;
-	}
-     
-	String getMin(){ 
-		return Min;
-	}
-	
-	String getSec(){ 
-		return Sec;
-	}
 //	void setVersion(byte[] buf, int startpos, int length){
 //		
 //		long ToUnSigned = 0;
@@ -388,10 +369,6 @@ public class UpdatePacket {
     	Types = types;
     }
 
-    void setOwner(String str_owner){
-    	Owner = str_owner;
-    }
-    
     void setGivenName(String str_givenname){
     	
     	GivenName = str_givenname;
@@ -488,22 +465,11 @@ public class UpdatePacket {
     void setNotes(String str_notes){
     	Notes = str_notes;
     }
-    
-    void setDate(String str_date){
-    	Date = str_date;
+     
+    void setTime(String str_time){
+    	Time = str_time;
     }
     
-    void setHour(String str_hour){
-    	Hour = str_hour;
-    }
-    
-    void setMin(String str_min){
-    	Min = str_min;
-    }
-    
-    void setSec(String str_sec){
-    	Sec = str_sec;
-    }
     
 //    /**
 //	 * Convert a signed byte to unsigned byte.
