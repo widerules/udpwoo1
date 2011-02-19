@@ -59,9 +59,9 @@ public class ContactDBAdapter {
 		 + "spinsns text, sns text not null, spinorg text, org text not null, notes text not null,"
 		 + "time text not null);";   
 	
-	 private static final String DATABASE_NAME = "updatecontact5.db";    
+	 private static final String DATABASE_NAME = "updatecontact6.db";    
 	 private static final String DATABASE_TABLE = "contacts";    
-	 private static final int DATABASE_VERSION = 6;    
+	 private static final int DATABASE_VERSION = 7;    
 	 private final Context mCtx;
 	 
 	 private static class DatabaseHelper extends SQLiteOpenHelper {        
