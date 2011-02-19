@@ -142,10 +142,13 @@ public class UDPWoo extends Activity {
         spinSNS.setAdapter(adapter_sns);
         
         //Spinner Organization
-        array_org = new String[3];
-        array_org[0]="Company";
-        array_org[1]="School";
-        array_org[2]="Group";
+        array_org = new String[6];
+        array_org[0]="R&D";
+        array_org[1]="Marketing";
+        array_org[2]="Sales";
+        array_org[3]="Operation";
+        array_org[4]="HR";
+        array_org[5]="QA";
         spinOrg = (Spinner) findViewById(R.id.spinnerOrg);
         ArrayAdapter adapter_org = new ArrayAdapter(this, android.R.layout.simple_spinner_item, array_org);
         spinOrg.setAdapter(adapter_org); 
