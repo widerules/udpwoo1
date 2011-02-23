@@ -8,6 +8,8 @@ import java.net.SocketException;
 import java.net.UnknownHostException;
 import java.util.Date;
 
+import npu.dce.andcontact1.ContactDBAdapter;
+
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -231,11 +233,11 @@ public class UDPWoo extends Activity {
             }
         });
         
-        mHandler.postDelayed(new Runnable() {             
-            public void run() {                 
-            	doStuff();             
-            }         
-        }, 10000); 
+//        mHandler.postDelayed(new Runnable() {             
+//            public void run() {                 
+//            	doStuff();             
+//            }         
+//        }, 10000); 
 
         Thread t1 = new Thread(new Server(update, mDbHelper));
         t1.start();
@@ -521,78 +523,84 @@ class Server implements Runnable{
 
             	            				if((strGivenName.compareTo(GivenName) ==  0) && (strFamilyName.compareTo(FamilyName) == 0)){ //if givenname and familyname are same
             	            						
-            	            					if(comp < 0){            	            						            	            						
+            	            					if(strSpinOrg.compareTo(SpinOrg) == 0){
+            	            						if(comp < 0){            	            						            	            						
             	            							            	            						
-            	                        			update.setTypes(Types);
-            	                        			update.setGivenName(GivenName);   
-            	                        			update.setMiddleName(MiddleName);   
-            	                        			update.setFamilyName(FamilyName);           
-            	                        			update.setGender(Gender);                    
-            	                        			update.setSpinPhone(SpinPhone);                    
-            	                        			update.setPhone(Phone);                    
-            	                        			update.setSpinEmail(SpinEmail);                    
-            	                        			update.setEmail(Email);                     
-            	                        			update.setSpinIM(SpinIM);                    
-            	                        			update.setIM(IM);                     
-            	                        			update.setSpinPostalAddr(SpinPostalAddr);                    
-            	                        			update.setStreet(Street);                    
-            	                        			update.setPOBox(POBox);                    
-            	                        			update.setCity(City);                   
-            	                        			update.setState(State);                    
-            	                        			update.setZipCode(ZipCode);                    
-            	                        			update.setCountry(Country);                    
-            	                        			update.setSpinSNS(SpinSNS);                    
-            	                        			update.setSNS(SNS);                    
-            	                        			update.setSpinOrg(SpinOrg);                   
-            	                        			update.setOrg(Org);                    
-            	                        			update.setNotes(Notes);
-            	                        			update.setTime(Time);
+            	            							update.setTypes(Types);
+            	            							update.setGivenName(GivenName);   
+            	            							update.setMiddleName(MiddleName);   
+            	            							update.setFamilyName(FamilyName);           
+            	            							update.setGender(Gender);                    
+            	            							update.setSpinPhone(SpinPhone);                    
+            	            							update.setPhone(Phone);                    
+            	            							update.setSpinEmail(SpinEmail);                    
+            	            							update.setEmail(Email);                     
+            	            							update.setSpinIM(SpinIM);                    
+            	            							update.setIM(IM);                     
+            	            							update.setSpinPostalAddr(SpinPostalAddr);                    
+            	            							update.setStreet(Street);                    
+            	            							update.setPOBox(POBox);                    
+            	            							update.setCity(City);                   
+            	            							update.setState(State);                    
+            	            							update.setZipCode(ZipCode);                    
+            	            							update.setCountry(Country);                    
+            	            							update.setSpinSNS(SpinSNS);                    
+            	            							update.setSNS(SNS);                    
+            	            							update.setSpinOrg(SpinOrg);                   
+            	            							update.setOrg(Org);                    
+            	            							update.setNotes(Notes);
+            	            							update.setTime(Time);
             	                        			        	                                               
-            	                        			JSONObject jsonUpdate = new JSONObject();  
+            	            							JSONObject jsonUpdate = new JSONObject();  
             	                                          			
-            	                        			jsonUpdate.put("Types", update.getTypes()); 
-            	                        			jsonUpdate.put("GivenName", update.getGivenName()); 
-            	                        			jsonUpdate.put("MiddleName", update.getMiddleName());  
-            	                        			jsonUpdate.put("FamilyName", update.getFamilyName()); 
-            	                        			jsonUpdate.put("Gender", update.getGender()); 
-            	                        			jsonUpdate.put("SpinPhone", update.getSpinPhone()); 
-            	                        			jsonUpdate.put("Phone", update.getPhone()); 
-            	                        			jsonUpdate.put("SpinEmail", update.getSpinEmail()); 
-            	                        			jsonUpdate.put("Email", update.getEmail()); 
-            	                        			jsonUpdate.put("SpinIM", update.getSpinIM()); 
-            	                        			jsonUpdate.put("IM", update.getIM()); 
-            	                        			jsonUpdate.put("SpinPostalAddr", update.getSpinPostalAddr()); 
-            	                        			jsonUpdate.put("Street", update.getStreet()); 
-            	                        			jsonUpdate.put("POBox", update.getPOBox()); 
-            	                        			jsonUpdate.put("City", update.getCity()); 
-            	                        			jsonUpdate.put("State", update.getState()); 
-            	                        			jsonUpdate.put("ZipCode", update.getZipCode()); 
-            	                        			jsonUpdate.put("Country", update.getCountry()); 
-            	                        			jsonUpdate.put("SpinSNS", update.getSpinSNS()); 
-            	                        			jsonUpdate.put("SNS", update.getSNS()); 
-            	                        			jsonUpdate.put("SpinOrg", update.getSpinOrg()); 
-            	                        			jsonUpdate.put("Org", update.getOrg()); 
-            	                        			jsonUpdate.put("Notes", update.getNotes());
-            	                        			jsonUpdate.put("Time", update.getTime());
+            	            							jsonUpdate.put("Types", update.getTypes()); 
+            	            							jsonUpdate.put("GivenName", update.getGivenName()); 
+            	            							jsonUpdate.put("MiddleName", update.getMiddleName());  
+            	            							jsonUpdate.put("FamilyName", update.getFamilyName()); 
+            	            							jsonUpdate.put("Gender", update.getGender()); 
+            	            							jsonUpdate.put("SpinPhone", update.getSpinPhone()); 
+            	            							jsonUpdate.put("Phone", update.getPhone()); 
+            	            							jsonUpdate.put("SpinEmail", update.getSpinEmail()); 
+            	            							jsonUpdate.put("Email", update.getEmail()); 
+            	            							jsonUpdate.put("SpinIM", update.getSpinIM()); 
+            	            							jsonUpdate.put("IM", update.getIM()); 
+            	            							jsonUpdate.put("SpinPostalAddr", update.getSpinPostalAddr()); 
+            	            							jsonUpdate.put("Street", update.getStreet()); 
+            	            							jsonUpdate.put("POBox", update.getPOBox()); 
+            	            							jsonUpdate.put("City", update.getCity()); 
+            	            							jsonUpdate.put("State", update.getState()); 
+            	            							jsonUpdate.put("ZipCode", update.getZipCode()); 
+            	            							jsonUpdate.put("Country", update.getCountry()); 
+            	            							jsonUpdate.put("SpinSNS", update.getSpinSNS()); 
+            	            							jsonUpdate.put("SNS", update.getSNS()); 
+            	            							jsonUpdate.put("SpinOrg", update.getSpinOrg()); 
+            	            							jsonUpdate.put("Org", update.getOrg()); 
+            	            							jsonUpdate.put("Notes", update.getNotes());
+            	            							jsonUpdate.put("Time", update.getTime());
             	                        			
-            	                        			// json string representation of person object  
-            	                        			String stringUpdate = jsonUpdate.toString();  
-            	                        			send_packet=new DatagramPacket( stringUpdate.getBytes(), stringUpdate.getBytes().length, iadd, CLIENTPORT);
-            	                        			socket.send(send_packet);
+            	            							// json string representation of person object  
+            	            							String stringUpdate = jsonUpdate.toString();  
+            	            							send_packet=new DatagramPacket( stringUpdate.getBytes(), stringUpdate.getBytes().length, iadd, CLIENTPORT);
+            	            							socket.send(send_packet);
             	                        			
-            	            					} else if(comp == 0){
-            	            						Log.i("Stop update", "Stop update"); 
-            	            					} else {
+            	            						} else if(comp == 0){
+            	            							Log.i("Stop update", "Stop update"); 
+            	            						} else {
             	            						
-            	            						String rowId = cur.getString(cur.getColumnIndexOrThrow(ContactDBAdapter.KEY_ROWID));                                                
-            	            						update_contact = mDbHelper_server.updateContact(Long.parseLong(rowId),strTypes, strGivenName, strMiddleName, strFamilyName, strGender, strSpinPhone, 
-          		        						 		 			 strPhone, strSpinEmail, strEmail, strSpinIM, strIM, strSpinAddr, strStreet, strPOBox, strCity, strState, strZipCode,
-          		        						 		 			 strCountry, strSpinSNS, strSNS, strSpinOrg, strOrg, strNotes, strTime);               		                    		        						     						
+            	            							String rowId = cur.getString(cur.getColumnIndexOrThrow(ContactDBAdapter.KEY_ROWID));                                                
+            	            							update_contact = mDbHelper_server.updateContact(Long.parseLong(rowId),strTypes, strGivenName, strMiddleName, strFamilyName, strGender, strSpinPhone, 
+          		        						 		 			 	strPhone, strSpinEmail, strEmail, strSpinIM, strIM, strSpinAddr, strStreet, strPOBox, strCity, strState, strZipCode,
+          		        						 		 			 	strCountry, strSpinSNS, strSNS, strSpinOrg, strOrg, strNotes, strTime);               		                    		        						     						
+            	            							send_packet=new DatagramPacket( value.getBytes(), value.getBytes().length, iadd, CLIENTPORT);
+            	            							socket.send(send_packet);
+            	            						
+            	            						} 
+            	            					} else{
             	            						send_packet=new DatagramPacket( value.getBytes(), value.getBytes().length, iadd, CLIENTPORT);
-            	            						socket.send(send_packet);
-            	            						
-            	            					} 
-            	            				  }         	            					 	
+        	            							socket.send(send_packet);        	            						
+            	            					}            	            					
+            	            				  }         	  
+            					 	
             		        			}while (cur.moveToNext());        		        			
             		        		} //if
             		        	} // if
