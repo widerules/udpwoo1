@@ -8,8 +8,6 @@ import java.net.SocketException;
 import java.net.UnknownHostException;
 import java.util.Date;
 
-import npu.dce.andcontact1.ContactDBAdapter;
-
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -31,6 +29,7 @@ import android.widget.Toast;
 
 public class UDPWoo extends Activity {
 
+	//test from Rai
 	Button btnSave, btnSendSMS;
 //	CheckBox checkOwner;
 	EditText editGivenName, editMiddleName, editFamilyName, editPhone, editEmail, 
