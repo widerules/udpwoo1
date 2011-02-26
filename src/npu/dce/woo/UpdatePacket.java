@@ -10,7 +10,7 @@ public class UpdatePacket {
 //    /*** Byte array of the data. ***/
 //    byte[] _buf = null;
 //
-//    int Version;
+    int Version;
     String Types;
 	String GivenName;
 	String MiddleName;
@@ -253,9 +253,9 @@ public class UpdatePacket {
 //    }
 //    
     // get field value
-//    int getVersion(){
-//    	return Version;
-//    }
+    int getVersion(){
+    	return Version;
+    }
     
     String getTypes(){
         return Types;
@@ -365,6 +365,10 @@ public class UpdatePacket {
 //			  _buf[j] = (byte)((ToUnSigned >> 8*((startpos+length) - (j+1))) & 0xff);
 //    }
 
+	void setVersion(int version){
+    	Version = version;
+    }
+	
     void setTypes(String types){
     	Types = types;
     }
