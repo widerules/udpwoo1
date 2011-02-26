@@ -37,8 +37,11 @@ public class ContactDBAdapter {
 	 public static final String KEY_SPINSNS = "spinsns";
 	 public static final String KEY_SNS = "sns";
 	 
-	 public static final String KEY_SPINORG = "spinorg";
-	 public static final String KEY_ORG = "org";
+	 public static final String KEY_SPINORG1 = "spinorg1";
+	 public static final String KEY_ORG1 = "org1";
+	 
+	 public static final String KEY_SPINORG2 = "spinorg2";
+	 public static final String KEY_ORG2 = "org2";
 	 
 	 public static final String KEY_NOTES = "notes";
 	 
@@ -56,12 +59,12 @@ public class ContactDBAdapter {
 		 + "gender text not null, spinphone text, phone text not null,"
 		 + "spinemail text, email text not null, spinim text, im text not null,"
 		 + "spinaddr text, street text not null, pobox text not null, city text not null, state text not null, zipcode text not null,country text not null,"
-		 + "spinsns text, sns text not null, spinorg text, org text not null, notes text not null,"
+		 + "spinsns text, sns text not null, spinorg1 text, org1 text not null, spinorg2 text, org2 text not null, notes text not null,"
 		 + "time text not null);";   
 	
-	 private static final String DATABASE_NAME = "updatecontact6.db";    
+	 private static final String DATABASE_NAME = "updatecontact7.db";    
 	 private static final String DATABASE_TABLE = "contacts";    
-	 private static final int DATABASE_VERSION = 7;    
+	 private static final int DATABASE_VERSION = 8;    
 	 private final Context mCtx;
 	 
 	 private static class DatabaseHelper extends SQLiteOpenHelper {        
@@ -103,8 +106,8 @@ public class ContactDBAdapter {
 	
 	public long createContact(String types, String givenname, String middlename, String familyname, String gender, String spinphone, String phone,
 			String spinemail, String email, String spinim, String im, String spinaddr, String street, String pobox, 
-			String city, String state, String zipcode, String country, String spinsns, String sns, String spinorg, 
-			String org, String notes, String time) {        
+			String city, String state, String zipcode, String country, String spinsns, String sns, String spinorg1, 
+			String org1, String spinorg2, String org2, String notes, String time) {        
 		 
 		 ContentValues initialValues = new ContentValues(); 
 		 initialValues.put(KEY_TYPES, types);
@@ -127,8 +130,10 @@ public class ContactDBAdapter {
 		 initialValues.put(KEY_COUNTRY, country);
 		 initialValues.put(KEY_SPINSNS, spinsns);
 		 initialValues.put(KEY_SNS, sns);
-		 initialValues.put(KEY_SPINORG, spinorg);
-		 initialValues.put(KEY_ORG, org);
+		 initialValues.put(KEY_SPINORG1, spinorg1);
+		 initialValues.put(KEY_ORG1, org1);
+		 initialValues.put(KEY_SPINORG2, spinorg2);
+		 initialValues.put(KEY_ORG2, org2);		 
 		 initialValues.put(KEY_NOTES, notes); 
 		 initialValues.put(KEY_TIME, time); 
 		 
@@ -149,17 +154,17 @@ public class ContactDBAdapter {
 		return mDb.query(DATABASE_TABLE, new String[] {KEY_ROWID, KEY_TYPES,
 				KEY_GIVENNAME, KEY_MIDDLENAME, KEY_FAMILYNAME, KEY_GENDER, KEY_SPINPHONE, KEY_PHONE,
 				KEY_SPINEMAIL, KEY_EMAIL, KEY_SPINIM, KEY_IM, KEY_SPINADDR, KEY_STREET, KEY_POBOX,
-				KEY_CITY, KEY_STATE, KEY_ZIPCODE, KEY_COUNTRY, KEY_SPINSNS, KEY_SNS, KEY_SPINORG,
-				KEY_ORG, KEY_NOTES, KEY_TIME}, null, null, null, null, null);    
+				KEY_CITY, KEY_STATE, KEY_ZIPCODE, KEY_COUNTRY, KEY_SPINSNS, KEY_SNS, KEY_SPINORG1,
+				KEY_ORG1, KEY_SPINORG2, KEY_ORG2, KEY_NOTES, KEY_TIME}, null, null, null, null, null);    
 	}
 	
 	public Cursor fetchContact(long rowId) throws SQLException {        
 		
 		Cursor mCursor = mDb.query(true, DATABASE_TABLE, new String[] {KEY_ROWID, KEY_TYPES,                  
-				KEY_GIVENNAME, KEY_MIDDLENAME, KEY_FAMILYNAME, KEY_GENDER, KEY_SPINPHONE, KEY_PHONE,
-				KEY_SPINEMAIL, KEY_EMAIL, KEY_SPINIM, KEY_IM, KEY_SPINADDR, KEY_STREET, KEY_POBOX,
-				KEY_CITY, KEY_STATE, KEY_ZIPCODE, KEY_COUNTRY, KEY_SPINSNS, KEY_SNS, KEY_SPINORG,
-				KEY_ORG, KEY_NOTES, KEY_TIME}, KEY_ROWID + "=" + rowId, null, null, null, null, null);        
+						 KEY_GIVENNAME, KEY_MIDDLENAME, KEY_FAMILYNAME, KEY_GENDER, KEY_SPINPHONE, KEY_PHONE,
+						 KEY_SPINEMAIL, KEY_EMAIL, KEY_SPINIM, KEY_IM, KEY_SPINADDR, KEY_STREET, KEY_POBOX,
+						 KEY_CITY, KEY_STATE, KEY_ZIPCODE, KEY_COUNTRY, KEY_SPINSNS, KEY_SNS, KEY_SPINORG1,
+						 KEY_ORG1, KEY_SPINORG2, KEY_ORG2, KEY_NOTES, KEY_TIME}, KEY_ROWID + "=" + rowId, null, null, null, null, null);        
 		
 		if (mCursor != null)
 			mCursor.moveToFirst();                
@@ -169,8 +174,8 @@ public class ContactDBAdapter {
 	
 	public boolean updateContact(long rowId, String types, String givenname, String middlename, String familyname, String gender, String spinphone, String phone,
 			String spinemail, String email, String spinim, String im, String spinaddr, String street, String pobox, 
-			String city, String state, String zipcode, String country, String spinsns, String sns, String spinorg, 
-			String org, String notes, String time) { 
+			String city, String state, String zipcode, String country, String spinsns, String sns, String spinorg1, 
+			String org1, String spinorg2, String org2, String notes, String time) { 
 		
 		ContentValues args = new ContentValues();        
 		args.put(KEY_TYPES, types);
@@ -193,8 +198,10 @@ public class ContactDBAdapter {
 		args.put(KEY_COUNTRY, country);
 		args.put(KEY_SPINSNS, spinsns);
 		args.put(KEY_SNS, sns);
-		args.put(KEY_SPINORG, spinorg);
-		args.put(KEY_ORG, org);
+		args.put(KEY_SPINORG1, spinorg1);
+		args.put(KEY_ORG1, org1);
+		args.put(KEY_SPINORG2, spinorg2);
+		args.put(KEY_ORG2, org2);		
 		args.put(KEY_NOTES, notes); 
 		args.put(KEY_TIME, time); 
 	
