@@ -29,21 +29,20 @@ import android.widget.Toast;
 
 public class UDPWoo extends Activity {
 
-	//test from Rai
 	Button btnSave, btnSendSMS;
 //	CheckBox checkOwner;
 	EditText editGivenName, editMiddleName, editFamilyName, editPhone, editEmail, 
 	         editIM, editStreet, editPOBox, editCity, editState, editZipCode, editCountry, 
-	         editSNS, editOrg, editNotes;
+	         editSNS, editOrg1, editOrg2, editNotes;
 	RadioButton btnMan, btnWoman;
-	Spinner spinPhone, spinEmail, spinIM, spinPostalAddr, spinSNS, spinOrg;
+	Spinner spinPhone, spinEmail, spinIM, spinPostalAddr, spinSNS, spinOrg1, spinOrg2;
 	long contact_id;
 	
 	public String total;
 	
 	String strTypes, strGivenName, strMiddleName, strFamilyName, strMan, strWoman, strSpinPhone, 
 		   strPhone, strSpinEmail, strEmail, strSpinIM, strIM, strSpinAddr, strStreet, strPOBox, strCity, strState, strZipCode,
-	       strCountry, strSpinSNS, strSNS, strSpinOrg, strOrg, strNotes, strTime; 
+	       strCountry, strSpinSNS, strSNS, strSpinOrg1, strSpinOrg2, strOrg1, strOrg2, strNotes, strTime; 
 	
 	private ContactDBAdapter mDbHelper;
 	SQLiteDatabase db;
@@ -54,7 +53,8 @@ public class UDPWoo extends Activity {
 	private String array_im[];
 	private String array_postaladdr[];
 	private String array_sns[];
-	private String array_org[];
+	private String array_org1[];
+	private String array_org2[];
 	
 	private Handler mHandler = new Handler(); 
 	
@@ -69,7 +69,7 @@ public class UDPWoo extends Activity {
         mDbHelper.open();   
         
         btnSave = (Button) findViewById(R.id.buttonSave);
-        btnSendSMS = (Button) findViewById(R.id.btnSendSMS);
+        btnSendSMS = (Button) findViewById(R.id.btnRevert);
         
         editGivenName = (EditText) findViewById(R.id.txtGivenName);
         editMiddleName = (EditText) findViewById(R.id.txtMiddleName);
@@ -88,7 +88,8 @@ public class UDPWoo extends Activity {
         editZipCode = (EditText) findViewById(R.id.txtZipCode);
         editCountry = (EditText) findViewById(R.id.txtCountry);
         editSNS = (EditText) findViewById(R.id.txtSNS);
-        editOrg = (EditText) findViewById(R.id.txtOrg);
+        editOrg1 = (EditText) findViewById(R.id.txtOrg1);
+        editOrg2 = (EditText) findViewById(R.id.txtOrg2);
         editNotes = (EditText) findViewById(R.id.txtNotes);
         
         //Spinner Phone
@@ -142,18 +143,34 @@ public class UDPWoo extends Activity {
         ArrayAdapter adapter_sns = new ArrayAdapter(this, android.R.layout.simple_spinner_item, array_sns);
         spinSNS.setAdapter(adapter_sns);
         
-        //Spinner Organization
-        array_org = new String[6];
-        array_org[0]="R&D";
-        array_org[1]="Marketing";
-        array_org[2]="Sales";
-        array_org[3]="Operation";
-        array_org[4]="HR";
-        array_org[5]="QA";
-        spinOrg = (Spinner) findViewById(R.id.spinnerOrg);
-        ArrayAdapter adapter_org = new ArrayAdapter(this, android.R.layout.simple_spinner_item, array_org);
-        spinOrg.setAdapter(adapter_org); 
-         
+        //Spinner Organization1
+        array_org1 = new String[6];
+        array_org1[0]="R&D";
+        array_org1[1]="Marketing";
+        array_org1[2]="Sales";
+        array_org1[3]="Operation";
+        array_org1[4]="HR";
+        array_org1[5]="QA";
+        spinOrg1 = (Spinner) findViewById(R.id.spinnerOrg1);
+        ArrayAdapter adapter_org1 = new ArrayAdapter(this, android.R.layout.simple_spinner_item, array_org1);
+        spinOrg1.setAdapter(adapter_org1); 
+        
+        //Spinner Organization2
+        array_org2 = new String[10];
+        array_org2[0]="BBAIS";
+        array_org2[1]="BSCS";
+        array_org2[2]="BSCSE";
+        array_org2[3]="BSEE";
+        array_org2[4]="MBA";
+        array_org2[5]="MSEE";
+        array_org2[6]="MSCSE";
+        array_org2[7]="MSCS";
+        array_org2[8]="DBA";
+        array_org2[9]="DCE";        
+        spinOrg2 = (Spinner) findViewById(R.id.spinnerOrg2);
+        ArrayAdapter adapter_org2 = new ArrayAdapter(this, android.R.layout.simple_spinner_item, array_org2);
+        spinOrg2.setAdapter(adapter_org2); 
+        
         // Not showing soft keyboard
         editGivenName.setInputType(0);
         editMiddleName.setInputType(0);
@@ -168,7 +185,8 @@ public class UDPWoo extends Activity {
         editZipCode.setInputType(0); 
         editCountry.setInputType(0); 
         editSNS.setInputType(0); 
-        editOrg.setInputType(0); 
+        editOrg1.setInputType(0);
+        editOrg2.setInputType(0);
         editNotes.setInputType(0); 
               
         
@@ -213,8 +231,11 @@ public class UDPWoo extends Activity {
                 strSpinSNS = spinSNS.getSelectedItem().toString();
                 strSNS = editSNS.getText().toString();
                 
-                strSpinOrg = spinOrg.getSelectedItem().toString();
-                strOrg = editOrg.getText().toString();
+                strSpinOrg1 = spinOrg1.getSelectedItem().toString();                
+                strOrg1 = editOrg1.getText().toString();
+                
+                strSpinOrg2 = spinOrg2.getSelectedItem().toString();                
+                strOrg2 = editOrg2.getText().toString();
                 
                 strNotes = editNotes.getText().toString();
                 
@@ -222,13 +243,13 @@ public class UDPWoo extends Activity {
                                 
                 if(btnMan.isChecked() == true)
             		contact_id = mDbHelper.createContact(strTypes, strGivenName, strMiddleName, strFamilyName, strMan, strSpinPhone, strPhone, 
-            				strSpinEmail, strEmail, strSpinIM, strIM, strSpinAddr, strStreet, strPOBox, strCity, strState, 
-            				strZipCode, strCountry, strSpinSNS, strSNS, strSpinOrg, strOrg, strNotes, strTime);
+            					 strSpinEmail, strEmail, strSpinIM, strIM, strSpinAddr, strStreet, strPOBox, strCity, strState, 
+            					 strZipCode, strCountry, strSpinSNS, strSNS, strSpinOrg1, strOrg1, strSpinOrg2, strOrg2, strNotes, strTime);
             		
             	if(btnWoman.isChecked() == true)
             		contact_id = mDbHelper.createContact(strTypes, strGivenName, strMiddleName, strFamilyName, strWoman, strSpinPhone, strPhone, 
-            				strSpinEmail, strEmail, strSpinIM, strIM, strSpinAddr, strStreet, strPOBox, strCity, strState, 
-            				strZipCode, strCountry, strSpinSNS, strSNS, strSpinOrg, strOrg, strNotes, strTime);
+            				     strSpinEmail, strEmail, strSpinIM, strIM, strSpinAddr, strStreet, strPOBox, strCity, strState, 
+            				     strZipCode, strCountry, strSpinSNS, strSNS, strSpinOrg1, strOrg1, strSpinOrg2, strOrg2, strNotes, strTime);
             }
         });
         
@@ -238,8 +259,8 @@ public class UDPWoo extends Activity {
 //            }         
 //        }, 10000); 
 
-        Thread t1 = new Thread(new Server(update, mDbHelper));
-        t1.start();
+//        Thread t1 = new Thread(new Server(update, mDbHelper));
+//        t1.start();
            
     } //onCreate
     
@@ -313,8 +334,8 @@ class Client implements Runnable{
             			update.Country = cursor.getString(cursor.getColumnIndex(ContactDBAdapter.KEY_COUNTRY));
             			update.SpinSNS = cursor.getString(cursor.getColumnIndex(ContactDBAdapter.KEY_SPINSNS));
             			update.SNS = cursor.getString(cursor.getColumnIndex(ContactDBAdapter.KEY_SNS));
-            			update.SpinOrg = cursor.getString(cursor.getColumnIndex(ContactDBAdapter.KEY_SPINORG));
-            			update.Org = cursor.getString(cursor.getColumnIndex(ContactDBAdapter.KEY_ORG));
+            			update.SpinOrg = cursor.getString(cursor.getColumnIndex(ContactDBAdapter.KEY_SPINORG1));
+            			update.Org = cursor.getString(cursor.getColumnIndex(ContactDBAdapter.KEY_ORG1));
             			update.Notes = cursor.getString(cursor.getColumnIndex(ContactDBAdapter.KEY_NOTES));
             			update.Time = cursor.getString(cursor.getColumnIndex(ContactDBAdapter.KEY_TIME));
             			            			            			
@@ -508,8 +529,8 @@ class Server implements Runnable{
             		            			Country = cur.getString(cur.getColumnIndex(ContactDBAdapter.KEY_COUNTRY));
             		            			SpinSNS = cur.getString(cur.getColumnIndex(ContactDBAdapter.KEY_SPINSNS));
             		            			SNS = cur.getString(cur.getColumnIndex(ContactDBAdapter.KEY_SNS));
-            		            			SpinOrg = cur.getString(cur.getColumnIndex(ContactDBAdapter.KEY_SPINORG));
-            		            			Org = cur.getString(cur.getColumnIndex(ContactDBAdapter.KEY_ORG));
+            		            			SpinOrg = cur.getString(cur.getColumnIndex(ContactDBAdapter.KEY_SPINORG1));
+            		            			Org = cur.getString(cur.getColumnIndex(ContactDBAdapter.KEY_ORG1));
             		            			Notes = cur.getString(cur.getColumnIndex(ContactDBAdapter.KEY_NOTES));
             		            			Time = cur.getString(cur.getColumnIndex(ContactDBAdapter.KEY_TIME));
             		            			
@@ -587,9 +608,9 @@ class Server implements Runnable{
             	            						} else {
             	            						
             	            							String rowId = cur.getString(cur.getColumnIndexOrThrow(ContactDBAdapter.KEY_ROWID));                                                
-            	            							update_contact = mDbHelper_server.updateContact(Long.parseLong(rowId),strTypes, strGivenName, strMiddleName, strFamilyName, strGender, strSpinPhone, 
-          		        						 		 			 	strPhone, strSpinEmail, strEmail, strSpinIM, strIM, strSpinAddr, strStreet, strPOBox, strCity, strState, strZipCode,
-          		        						 		 			 	strCountry, strSpinSNS, strSNS, strSpinOrg, strOrg, strNotes, strTime);               		                    		        						     						
+//            	            							update_contact = mDbHelper_server.updateContact(Long.parseLong(rowId),strTypes, strGivenName, strMiddleName, strFamilyName, strGender, strSpinPhone, 
+//          		        						 		 			 	strPhone, strSpinEmail, strEmail, strSpinIM, strIM, strSpinAddr, strStreet, strPOBox, strCity, strState, strZipCode,
+//          		        						 		 			 	strCountry, strSpinSNS, strSNS, strSpinOrg, strOrg, strNotes, strTime);               		                    		        						     						
             	            							send_packet=new DatagramPacket( value.getBytes(), value.getBytes().length, iadd, CLIENTPORT);
             	            							socket.send(send_packet);
             	            						
