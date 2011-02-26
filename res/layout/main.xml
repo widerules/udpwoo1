@@ -298,13 +298,13 @@ android:layout_y="780px"
 android:id="@+id/widget265"
 android:layout_width="wrap_content"
 android:layout_height="wrap_content"
-android:text="Group"
+android:text="Group1"
 android:layout_x="5px"
 android:layout_y="830px"
 >
 </TextView>
 <Spinner
-android:id="@+id/spinnerOrg"
+android:id="@+id/spinnerOrg1"
 android:layout_width="wrap_content"
 android:layout_height="wrap_content"
 android:layout_x="12px"
@@ -312,7 +312,7 @@ android:layout_y="850px"
 >
 </Spinner>
 <EditText
-android:id="@+id/txtOrg"
+android:id="@+id/txtOrg1"
 android:layout_width="161px"
 android:layout_height="wrap_content"
 android:text=""
@@ -325,9 +325,36 @@ android:layout_y="850px"
 android:id="@+id/widget265"
 android:layout_width="wrap_content"
 android:layout_height="wrap_content"
-android:text="Notes"
+android:text="Group2"
 android:layout_x="5px"
 android:layout_y="900px"
+>
+</TextView>
+<Spinner
+android:id="@+id/spinnerOrg2"
+android:layout_width="wrap_content"
+android:layout_height="wrap_content"
+android:layout_x="12px"
+android:layout_y="920px"
+>
+</Spinner>
+<EditText
+android:id="@+id/txtOrg2"
+android:layout_width="161px"
+android:layout_height="wrap_content"
+android:text=""
+android:textSize="18sp"
+android:layout_x="146px"
+android:layout_y="920px"
+>
+</EditText>
+<TextView
+android:id="@+id/widget265"
+android:layout_width="wrap_content"
+android:layout_height="wrap_content"
+android:text="Notes"
+android:layout_x="5px"
+android:layout_y="970px"
 >
 </TextView>
 <EditText
@@ -337,7 +364,7 @@ android:layout_height="wrap_content"
 android:text=""
 android:textSize="18sp"
 android:layout_x="15px"
-android:layout_y="920px"
+android:layout_y="990px"
 >
 </EditText>
 </AbsoluteLayout>
@@ -354,11 +381,11 @@ android:text="Save"
 android:layout_width="160px"
 android:textStyle="bold" />
 <Button 
-android:id="@+id/btnSendSMS"  
+android:id="@+id/btnRevert"  
 android:layout_width="160px"
 android:layout_height="wrap_content"
 android:textStyle="bold" 
-android:text="Send Contact Info" />  
+android:text="Revert" />  
 </TableRow> 
 </TableLayout>
 </LinearLayout>
