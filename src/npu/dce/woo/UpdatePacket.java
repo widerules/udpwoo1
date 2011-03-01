@@ -10,7 +10,7 @@ public class UpdatePacket {
 //    /*** Byte array of the data. ***/
 //    byte[] _buf = null;
 //
-    int Version;
+    String Version;
     String Types;
 	String GivenName;
 	String MiddleName;
@@ -31,8 +31,10 @@ public class UpdatePacket {
 	String Country;
 	String SpinSNS;
 	String SNS;
-	String SpinOrg;
-	String Org;
+	String SpinOrg1;
+	String Org1;
+	String SpinOrg2;
+	String Org2;
 	String Notes;
 	String Time;
 	
@@ -253,7 +255,7 @@ public class UpdatePacket {
 //    }
 //    
     // get field value
-    int getVersion(){
+    String getVersion(){
     	return Version;
     }
     
@@ -337,12 +339,20 @@ public class UpdatePacket {
 		return SNS;
 	}
 	
-	String getSpinOrg(){ 
-		return SpinOrg;
+	String getSpinOrg1(){ 
+		return SpinOrg1;
 	}
 	
-	String getOrg(){ 
-		return Org;
+	String getOrg1(){ 
+		return Org1;
+	}
+	
+	String getSpinOrg2(){ 
+		return SpinOrg2;
+	}
+	
+	String getOrg2(){ 
+		return Org2;
 	}
 	
 	String getNotes(){ 
@@ -365,7 +375,7 @@ public class UpdatePacket {
 //			  _buf[j] = (byte)((ToUnSigned >> 8*((startpos+length) - (j+1))) & 0xff);
 //    }
 
-	void setVersion(int version){
+	void setVersion(String version){
     	Version = version;
     }
 	
@@ -458,14 +468,22 @@ public class UpdatePacket {
     	SNS = str_sns;
     }
 
-    void setSpinOrg(String str_spinorg){
-    	SpinOrg = str_spinorg;
+    void setSpinOrg1(String str_spinorg1){
+    	SpinOrg1 = str_spinorg1;
     }
 
-    void setOrg(String str_org){
-    	Org = str_org;
+    void setOrg1(String str_org1){
+    	Org1 = str_org1;
     }
 
+    void setSpinOrg2(String str_spinorg2){
+    	SpinOrg2 = str_spinorg2;
+    }
+
+    void setOrg2(String str_org2){
+    	Org2 = str_org2;
+    }
+    
     void setNotes(String str_notes){
     	Notes = str_notes;
     }
