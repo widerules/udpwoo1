@@ -5,6 +5,7 @@ import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.InetAddress;
 import java.net.SocketException;
+import java.net.SocketTimeoutException;
 import java.net.UnknownHostException;
 import java.util.Date;
 
@@ -253,29 +254,42 @@ public class UDPWoo extends Activity {
             }
         });
         
-        mHandler.postDelayed(new Runnable() {             
-            public void run() {                 
-            	doStuff();             
-            }         
-        }, 10000); 
+//        mHandler.postDelayed(new Runnable() {             
+//            public void run() {                 
+//            	doStuff();             
+//            }         
+//        }, 10000); 
 
-        Thread t1 = new Thread(new Server(update, mDbHelper));
-        t1.start();
-           
-    } //onCreate
-    
-    private void doStuff() {           
-    	Context context = getApplicationContext();
+        Context context = getApplicationContext();
     	int duration = Toast.LENGTH_SHORT;
     	
     	Thread t = new Thread(new Client(mDbHelper));
-    	Toast toast1 = Toast.makeText(context,"Start client thread after 10 sec", duration);
+    	Toast toast1 = Toast.makeText(context,"Start client thread", duration);
         toast1.show();        	
         t.start(); 
-    	
-    } 
+        
+        Thread t1 = new Thread(new Server1(update, mDbHelper));
+        Thread t2 = new Thread(new Server2(mDbHelper));
+        
+        t1.setPriority(Thread.MIN_PRIORITY);
+        t2.setPriority(Thread.MAX_PRIORITY);
+        
+        t1.start();
+        t2.start();
+        
+    } //onCreate
     
-
+//    private void doStuff() {           
+//    	Context context = getApplicationContext();
+//    	int duration = Toast.LENGTH_SHORT;
+//    	
+//    	Thread t = new Thread(new Client(mDbHelper));
+//    	Toast toast1 = Toast.makeText(context,"Start client thread after 10 sec", duration);
+//        toast1.show();        	
+//        t.start(); 
+//    	
+//    } 
+    
 } //UDPWoo
 
 class Client implements Runnable{
@@ -286,11 +300,9 @@ class Client implements Runnable{
     ContactDBAdapter mDbHelper_server;
      
     UpdatePacket update = new UpdatePacket();
-    //UpdatePacket2 update2 = new UpdatePacket2();
     Thread t;
     
-    public Client(ContactDBAdapter mDbHelper) {
-            Log.i("client","inside constructor");            
+    public Client(ContactDBAdapter mDbHelper) {                     
             mDbHelper_server = mDbHelper;
     }
     
@@ -400,10 +412,10 @@ class Client implements Runnable{
             			String stringUpdate = jsonUpdate.toString();  
             			
             			DatagramPacket packet = new DatagramPacket( stringUpdate.getBytes(), stringUpdate.getBytes().length, iadd, CLIENTPORT);
-            			Log.i("client","1");
+            			Log.i("client","update_packet_on");
 
             			socket.send(packet);         			
-            			Log.i("client","2");
+            			Log.i("client","update_send_on");
             		//}                                  
             	} while(cursor.moveToNext());                        	
             	
@@ -427,18 +439,284 @@ class Client implements Runnable{
     } //run
 } //Client 
 
-class Server implements Runnable{
+class Client_Off1 implements Runnable{
+	 
+	public static final String CLIENTIP = "10.0.2.2";
+    public static final int CLIENTPORT = 6000;
+
+    ContactDBAdapter mDbHelper_server;
+     
+    UpdatePacket update = new UpdatePacket();
+    Thread t;
+    
+    public Client_Off1(ContactDBAdapter mDbHelper) {         
+            mDbHelper_server = mDbHelper;
+    }
+    
+    //@Override
+    public void run() {
+                	
+    	// TODO Auto-generated method stub
+    	try{
+    		InetAddress iadd = InetAddress.getByName(CLIENTIP);
+            DatagramSocket socket = new DatagramSocket();
+        	Cursor cursor = mDbHelper_server.fetchAllContacts();
+        	
+        	if(cursor != null){
+            	if(cursor.moveToFirst()){
+
+            	do{ 
+//            		if((cursor.getString(cursor.getColumnIndex(ContactDBAdapter.KEY_OWNER)).equalsIgnoreCase("Y"))
+//            			&& (cursor.getString(cursor.getColumnIndex(ContactDBAdapter.KEY_TYPES)).equalsIgnoreCase("update"))){
+			
+            			update.Version = "2";
+            			update.Types = cursor.getString(cursor.getColumnIndex(ContactDBAdapter.KEY_TYPES));
+            			update.GivenName = cursor.getString(cursor.getColumnIndex(ContactDBAdapter.KEY_GIVENNAME));
+            			update.MiddleName = cursor.getString(cursor.getColumnIndex(ContactDBAdapter.KEY_MIDDLENAME));
+            			update.FamilyName = cursor.getString(cursor.getColumnIndex(ContactDBAdapter.KEY_FAMILYNAME));
+            			update.Gender = cursor.getString(cursor.getColumnIndex(ContactDBAdapter.KEY_GENDER));
+            			update.SpinPhone = cursor.getString(cursor.getColumnIndex(ContactDBAdapter.KEY_SPINPHONE));
+            			update.Phone = cursor.getString(cursor.getColumnIndex(ContactDBAdapter.KEY_PHONE));
+            			update.SpinEmail = cursor.getString(cursor.getColumnIndex(ContactDBAdapter.KEY_SPINEMAIL));
+            			update.Email = cursor.getString(cursor.getColumnIndex(ContactDBAdapter.KEY_EMAIL));
+            			update.SpinIM = cursor.getString(cursor.getColumnIndex(ContactDBAdapter.KEY_SPINIM));
+            			update.IM = cursor.getString(cursor.getColumnIndex(ContactDBAdapter.KEY_IM));
+            			update.SpinPostalAddr = cursor.getString(cursor.getColumnIndex(ContactDBAdapter.KEY_SPINADDR));
+            			update.Street = cursor.getString(cursor.getColumnIndex(ContactDBAdapter.KEY_STREET));
+            			update.POBox = cursor.getString(cursor.getColumnIndex(ContactDBAdapter.KEY_POBOX));
+            			update.City = cursor.getString(cursor.getColumnIndex(ContactDBAdapter.KEY_CITY));
+            			update.State = cursor.getString(cursor.getColumnIndex(ContactDBAdapter.KEY_STATE));
+            			update.ZipCode = cursor.getString(cursor.getColumnIndex(ContactDBAdapter.KEY_ZIPCODE));
+            			update.Country = cursor.getString(cursor.getColumnIndex(ContactDBAdapter.KEY_COUNTRY));
+            			update.SpinSNS = cursor.getString(cursor.getColumnIndex(ContactDBAdapter.KEY_SPINSNS));
+            			update.SNS = cursor.getString(cursor.getColumnIndex(ContactDBAdapter.KEY_SNS));
+            			update.SpinOrg1 = cursor.getString(cursor.getColumnIndex(ContactDBAdapter.KEY_SPINORG1));
+            			update.Org1 = cursor.getString(cursor.getColumnIndex(ContactDBAdapter.KEY_ORG1));
+            			update.SpinOrg2 = cursor.getString(cursor.getColumnIndex(ContactDBAdapter.KEY_SPINORG2));
+            			update.Org2 = cursor.getString(cursor.getColumnIndex(ContactDBAdapter.KEY_ORG2));            			
+            			update.Notes = cursor.getString(cursor.getColumnIndex(ContactDBAdapter.KEY_NOTES));
+            			update.Time = cursor.getString(cursor.getColumnIndex(ContactDBAdapter.KEY_TIME));
+            			       			
+            			update.setVersion(update.Version);            			
+            			update.setTypes(update.Types);
+            			update.setGivenName(update.GivenName);
+            			update.setMiddleName(update.MiddleName);   
+            			update.setFamilyName(update.FamilyName); 
+            			update.setGender(update.Gender);
+            			update.setSpinPhone(update.SpinPhone);
+            			update.setPhone(update.Phone);
+            			update.setSpinEmail(update.SpinEmail);
+            			update.setEmail(update.Email);    
+            			update.setSpinIM(update.SpinIM);
+            			update.setIM(update.IM);
+            			update.setSpinPostalAddr(update.SpinPostalAddr);             
+            			update.setStreet(update.Street);        
+            			update.setPOBox(update.POBox);    
+            			update.setCity(update.City);  
+            			update.setState(update.State);
+            			update.setZipCode(update.ZipCode);               
+            			update.setCountry(update.Country);
+            			update.setSpinSNS(update.SpinSNS);
+            			update.setSNS(update.SNS);     
+            			update.setSpinOrg1(update.SpinOrg1);
+            			update.setOrg1(update.Org1);
+            			update.setSpinOrg2(update.SpinOrg2);
+            			update.setOrg2(update.Org2);
+            			update.setNotes(update.Notes);
+            			update.setTime(update.Time);
+            			            			                                    			
+            			JSONObject jsonUpdate = new JSONObject();  
+
+            			jsonUpdate.put("Version", update.getVersion()); 
+            			jsonUpdate.put("Types", update.getTypes()); 
+            			jsonUpdate.put("GivenName", update.getGivenName()); 
+            			jsonUpdate.put("MiddleName", update.getMiddleName());  
+            			jsonUpdate.put("FamilyName", update.getFamilyName()); 
+            			jsonUpdate.put("Gender", update.getGender()); 
+            			jsonUpdate.put("SpinPhone", update.getSpinPhone()); 
+            			jsonUpdate.put("Phone", update.getPhone()); 
+            			jsonUpdate.put("SpinEmail", update.getSpinEmail()); 
+            			jsonUpdate.put("Email", update.getEmail()); 
+            			jsonUpdate.put("SpinIM", update.getSpinIM()); 
+            			jsonUpdate.put("IM", update.getIM()); 
+            			jsonUpdate.put("SpinPostalAddr", update.getSpinPostalAddr()); 
+            			jsonUpdate.put("Street", update.getStreet()); 
+            			jsonUpdate.put("POBox", update.getPOBox()); 
+            			jsonUpdate.put("City", update.getCity()); 
+            			jsonUpdate.put("State", update.getState()); 
+            			jsonUpdate.put("ZipCode", update.getZipCode()); 
+            			jsonUpdate.put("Country", update.getCountry()); 
+            			jsonUpdate.put("SpinSNS", update.getSpinSNS()); 
+            			jsonUpdate.put("SNS", update.getSNS()); 
+            			jsonUpdate.put("SpinOrg1", update.getSpinOrg1()); 
+            			jsonUpdate.put("Org1", update.getOrg1()); 
+            			jsonUpdate.put("SpinOrg2", update.getSpinOrg2()); 
+            			jsonUpdate.put("Org2", update.getOrg2());            			
+            			jsonUpdate.put("Notes", update.getNotes());
+            			jsonUpdate.put("Time", update.getTime());
+            			
+            			// json string representation of person object  
+            			String stringUpdate = jsonUpdate.toString();  
+            			
+            			DatagramPacket packet = new DatagramPacket( stringUpdate.getBytes(), stringUpdate.getBytes().length, iadd, CLIENTPORT);
+            			Log.i("client","update_packet_off");
+
+            			socket.send(packet);         			
+            			Log.i("client","update_send_off");
+            		//}                                  
+            	} while(cursor.moveToNext());                        	
+            	
+            	}//if                 	
+        	}	
+        	cursor.close(); 
+        	socket.close();
+
+    	} catch (UnknownHostException e) {
+    		 // TODO Auto-generated catch block
+             e.printStackTrace();
+         }catch (SocketException e) {
+        	 // TODO Auto-generated catch block
+        	 e.printStackTrace();
+         } catch (IOException e) {
+        	 // TODO Auto-generated catch block
+        	 e.printStackTrace();
+         } catch (Exception e) {
+        	 e.printStackTrace();
+         }         
+    } //run
+} //Client_Off1
+
+class Client_Off2 implements Runnable{
+	 
+	public static final String CLIENTIP = "10.0.2.2";
+    public static final int CLIENTPORT = 6000;
+
+    //@Override
+    public void run() {
+                	
+    	// TODO Auto-generated method stub
+    	try{
+    		
+    		InetAddress iadd = InetAddress.getByName(CLIENTIP);
+            DatagramSocket socket = new DatagramSocket();
+            			                                    			
+            JSONObject jsonUpdate = new JSONObject();  
+            jsonUpdate.put("Types", "Success"); 
+            			
+            String stringUpdate = jsonUpdate.toString();  
+            			
+            DatagramPacket packet = new DatagramPacket( stringUpdate.getBytes(), stringUpdate.getBytes().length, iadd, CLIENTPORT);
+            Log.i("client","success_packet");
+
+            socket.send(packet);   
+            Log.i("client","success_packet_send");
+            
+        	socket.close();
+
+    	 }catch(UnknownHostException e){
+    		 // TODO Auto-generated catch block
+             e.printStackTrace();
+         }catch(SocketException e){
+        	 // TODO Auto-generated catch block
+        	 e.printStackTrace();
+         }catch(IOException e){
+        	 // TODO Auto-generated catch block
+        	 e.printStackTrace();
+         }catch(Exception e){
+        	 e.printStackTrace();
+         }         
+    } //run
+} //Client_Off2
+
+
+class Server2 implements Runnable{
+    
+	public static final String SERVERIP = "10.0.2.15";
+    public static final int SERVERPORT = 6000;
+  
+    public static final String CLIENTIP = "10.0.2.2";
+    public static final int CLIENTPORT = 6000;
+    
+    UpdatePacket update = new UpdatePacket();
+    
+    String strSuccess;
+   
+    ContactDBAdapter mDbHelper_server;
+	
+    public Server2(ContactDBAdapter mDbHelper) {
+    	mDbHelper_server = mDbHelper;
+    }
+ 
+    @Override
+    public void run() {
+    	// TODO Auto-generated method stub        
+        	try {
+        		InetAddress inetadd= InetAddress.getByName(SERVERIP);
+        		DatagramSocket socket= new DatagramSocket(SERVERPORT,inetadd);
+ 
+        		//while(true){  
+        			        		    			
+        			try{
+        				byte[] buf = new byte[512];
+        				DatagramPacket receive_packet= new DatagramPacket(buf,buf.length);
+
+        				socket.setSoTimeout(5000); 
+        				Thread t = new Thread(new Client_Off1(mDbHelper_server)); 
+        				
+        				try{	 
+        					socket.receive(receive_packet);        					
+        				} catch(SocketTimeoutException  e){       	
+        			        t.start(); 
+        			        
+        				}
+        				
+        				//socket.receive(receive_packet);
+        				Log.i("server","Response");
+        				
+        				byte[] receive_data = receive_packet.getData();
+        				String value = new String(receive_data);
+        				 			
+        				strSuccess = new JSONObject(value).getString("Types");
+        				
+        				if(strSuccess.compareTo("Success") == 0){
+        					Log.i("Reponse Success", "Response Success"); 
+        				}
+     			        		        
+        			} catch(IOException e) {
+                        // TODO Auto-generated catch block
+                        e.printStackTrace();
+                    } catch(NullPointerException e) {
+                    	e.printStackTrace();	
+                    } catch (JSONException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					} 
+        		//} //while  
+        		
+        } catch (UnknownHostException e) {
+        	// TODO Auto-generated catch block
+            e.printStackTrace();
+        } catch (SocketException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();       
+        } 
+        
+} //run    
+} //Server2
+
+
+class Server1 implements Runnable{
         
 		public static final String SERVERIP = "10.0.2.15";
         public static final int SERVERPORT = 5000;
       
-        public static final String CLIENTIP="10.0.2.2";
-        public static final int CLIENTPORT=5000;
+        public static final String CLIENTIP = "10.0.2.2";
+        public static final int CLIENTPORT = 5000;
           
         UpdatePacket update = new UpdatePacket();
         boolean update_contact;
         
-        String strVersion, strTypes, strGivenName, strMiddleName, strFamilyName, strGender, strSpinPhone, 
+        String strSuccess, strVersion, strTypes, strGivenName, strMiddleName, strFamilyName, strGender, strSpinPhone, 
     	       strPhone, strSpinEmail, strEmail, strSpinIM, strIM, strSpinAddr, strStreet, strPOBox, strCity, strState, strZipCode,
                strCountry, strSpinSNS, strSNS, strSpinOrg1, strOrg1, strSpinOrg2, strOrg2, strNotes, strTime; 
         
@@ -451,7 +729,7 @@ class Server implements Runnable{
     	ContactDBAdapter mDbHelper_server;
     	UpdatePacket total_contact;
 
-        public Server(UpdatePacket total, ContactDBAdapter mDbHelper) {
+        public Server1(UpdatePacket total, ContactDBAdapter mDbHelper) {
                 Log.i("server","inside constructor");
                 total_contact = total;
                 mDbHelper_server = mDbHelper;
@@ -466,18 +744,22 @@ class Server implements Runnable{
             		
             		while(true){                	
             			try{
-            				        				    				
+            				
             				byte[] buf = new byte[512];
             				DatagramPacket receive_packet= new DatagramPacket(buf,buf.length);
-            				Log.i("server","1");
+            				Log.i("server","Update");
                            
-            				socket.receive(receive_packet);
-            				Log.i("server","2");
+            				socket.receive(receive_packet);  
+            				Log.i("server","Update received");
             				
+            				// send receive packet success
+            				Thread t = new Thread(new Client_Off2());       	
+            		        t.start();             				
+            				Log.i("server","Success send");
+            				            				
             				byte[] receive_data = receive_packet.getData();
             				String value = new String(receive_data);
-            				Log.i("server","3");
-            				
+            				            			
             				strVersion = new JSONObject(value).getString("Version");
             				strTypes = new JSONObject(value).getString("Types");
             				strGivenName = new JSONObject(value).getString("GivenName");  
@@ -505,7 +787,7 @@ class Server implements Runnable{
             				strOrg2 = new JSONObject(value).getString("Org2"); 
             				strNotes = new JSONObject(value).getString("Notes"); 
             				strTime = new JSONObject(value).getString("Time"); 
-            				        				
+            				              					
             				packetTime = Long.parseLong(strTime);
             				
             				DatagramPacket send_packet = new DatagramPacket(buf,buf.length);
@@ -668,8 +950,4 @@ class Server implements Runnable{
             } 
             
     } //run    
-} //Server
-
-
-
-
+} //Server1
